@@ -10,6 +10,7 @@ So generic NLog sample looks like
 	{
 		static Logger _log = LogManager.GetCurrentClassLogger();
 	}
+```
 
 This creates static logger per class with name initialized to namespace.LogSample
 
@@ -32,6 +33,7 @@ and create `NLogFactory` class like below
 			return LogManager.GetLogger(parentType.FullName);
 		}
 	}
+```
 
 and how it can be used
 
@@ -50,7 +52,7 @@ and how it can be used
 
 		Assert.AreEqual("Common.Test.LogTest", log.Name);
 	}
-
+```
 or with constructor parameter DI
 
 ```cs
@@ -73,5 +75,5 @@ or with constructor parameter DI
 
 		var lcpt = container.Resolve<LogContructorParameterTest>();
 		}
-
+```
 As you can see LogCreation source code was decoupled from logging framework 
