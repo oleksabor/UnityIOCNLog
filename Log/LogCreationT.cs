@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.Practices.ObjectBuilder2;
-using Microsoft.Practices.Unity;
-using Microsoft.Practices.Unity.ObjectBuilder;
+using Unity;
+using Unity.Builder;
+using Unity.Builder.Strategy;
+using Unity.Extension;
+using Unity.Policy;
+using Unity.Strategy;
 
 namespace Common.Log
 {
@@ -20,7 +23,7 @@ namespace Common.Log
 		object GetLogger(Type parentType);
 	}
 
-	//http://unity.codeplex.com/discussions/203744 SCDeveloper
+	//http://unity.codeplex.com/discussions/203744
 	public class LogCreation<T, U> : UnityContainerExtension where U : ILogFactory, new()
 	{
 
@@ -74,13 +77,13 @@ namespace Common.Log
 			else
 			{
 				StackTrace stackTrace = new StackTrace();
-				//first two are in the log creation strategy, can skip over them
-				for (int i = 2; i < stackTrace.FrameCount; i++)
+				//first -two- nine are in the log creation strategy, can skip over them
+				for (int i = 3; i < stackTrace.FrameCount; i++)
 				{
 					StackFrame frame = stackTrace.GetFrame(i);
 					logType = frame.GetMethod().DeclaringType;
 					//Console.WriteLine(logType.FullName);
-					if (!logType.FullName.StartsWith("Microsoft.Practices"))
+					if (!logType.FullName.StartsWith(typeof(IUnityContainer).Namespace) && !logType.FullName.StartsWith("System"))
 					{
 						break;
 					}

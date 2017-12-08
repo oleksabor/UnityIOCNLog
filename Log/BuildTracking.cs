@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Practices.ObjectBuilder2;
-using Microsoft.Practices.Unity;
-using Microsoft.Practices.Unity.ObjectBuilder;
+using Unity.Builder;
+using Unity.Builder.Strategy;
+using Unity.Extension;
+using Unity.Policy;
+using Unity.Strategy;
 
 namespace Common.Log
 {
 
-	//http://unity.codeplex.com/discussions/203744 marcoerni
+	//http://blog.baltrinic.com/software-development/dotnet/log4net-integration-with-unity-ioc-container
+	//http://unity.codeplex.com/discussions/203744
 	public class BuildTracking : UnityContainerExtension
 	{
 
@@ -18,7 +21,7 @@ namespace Common.Log
 
 		public static IBuildTrackingPolicy GetPolicy(IBuilderContext context)
 		{
-			return context.Policies.Get<IBuildTrackingPolicy>(context.BuildKey, true);
+			return context.Policies.Get<IBuildTrackingPolicy>(context.BuildKey);
 		}
 
 		public static IBuildTrackingPolicy SetPolicy(IBuilderContext context)
