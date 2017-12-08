@@ -6,10 +6,10 @@ This allows to get logger name to be the same as class where it is used
 So generic NLog sample looks like
 
 ```cs
-	class LogSample
-	{
-		static Logger _log = LogManager.GetCurrentClassLogger();
-	}
+class LogSample
+{
+	static Logger _log = LogManager.GetCurrentClassLogger();
+}
 ```
 
 This creates static logger per class with name initialized to namespace.LogSample
@@ -26,54 +26,54 @@ LogCreationT.cs
 and create `NLogFactory` class like below
 
 ```cs
-	public class NLogFactory : ILogFactory
+public class NLogFactory : ILogFactory
+{
+	public object GetLogger(Type parentType)
 	{
-		public object GetLogger(Type parentType)
-		{
-			return LogManager.GetLogger(parentType.FullName);
-		}
+		return LogManager.GetLogger(parentType.FullName);
 	}
+}
 ```
 
 and how it can be used
 
 ```cs
-	[TestMethod]
-	public void InMethodInitializationTest()
-	{
-		var container = new UnityContainer();
-		container
-			.AddNewExtension<BuildTracking>()
-			.AddNewExtension<LogCreation<ILogger, NLogFactory>>();
+[TestMethod]
+public void InMethodInitializationTest()
+{
+	var container = new UnityContainer();
+	container
+		.AddNewExtension<BuildTracking>()
+		.AddNewExtension<LogCreation<ILogger, NLogFactory>>();
 
-		var log = container.Resolve<ILogger>();
+	var log = container.Resolve<ILogger>();
 
-		log.Debug("test debug");
+	log.Debug("test debug");
 
-		Assert.AreEqual("Common.Test.LogTest", log.Name);
-	}
+	Assert.AreEqual("Common.Test.LogTest", log.Name);
+}
 ```
 or with constructor parameter DI
 
 ```cs
-	public class LogContructorParameterTest
+public class LogContructorParameterTest
+{
+	public LogContructorParameterTest(ILogger logger)
 	{
-		public LogContructorParameterTest(ILogger logger)
-		{
-			logger.Info("asdf");
-			Assert.AreEqual(this.GetType().FullName, logger.Name);
-		}
+		logger.Info("asdf");
+		Assert.AreEqual(this.GetType().FullName, logger.Name);
 	}
+}
 
-	[TestMethod]
-	public void InConstructorInitializationTest()
-	{
-		var container = new UnityContainer();
-		container
-			.AddNewExtension<BuildTracking>()
-			.AddNewExtension<LogCreation<ILogger, NLogFactory>>();
+[TestMethod]
+public void InConstructorInitializationTest()
+{
+	var container = new UnityContainer();
+	container
+		.AddNewExtension<BuildTracking>()
+		.AddNewExtension<LogCreation<ILogger, NLogFactory>>();
 
-		var lcpt = container.Resolve<LogContructorParameterTest>();
-		}
+	var lcpt = container.Resolve<LogContructorParameterTest>();
+	}
 ```
 As you can see LogCreation source code was decoupled from logging framework 

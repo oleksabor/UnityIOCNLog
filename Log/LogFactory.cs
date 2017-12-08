@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Common.Log
 {
+	/// <summary>
+	/// used to create logger instance <seealso cref="LogFactory"/>=
+	/// </summary>
 	public class NLogFactory : ILogFactory
 	{
 		public object GetLogger(Type parentType)
